@@ -11,18 +11,87 @@
     <header class="bg-slate-50 shadow-sm">
       <div id="logo" class="text-xl p-4">Tic Tac Toe</div>
     </header>
-    <main class="w-full h-full grid place-items-center">
+    <main class="grid place-items-center w-full h-5/6">
       <div
-        id="menu"
-        class="bg-slate-50 hidden shadow-sm w-2/3 h-2/3 grid place-items-center"
+        id="menu-container"
+        class="bg-slate-50 hidden place-content-center transition-opacity duration-300 p-4 relative text-lg font-bold shadow-md border border-gray-500 w-2/3 h-2/3 rounded-lg flex flex-col gap-2"
       >
-        <div onclick="resetGame()" class="text-2xl">Start</div>
+        <div
+          id="menu"
+          class="flex transition-opacity duration-300 gap-4 flex-col items-center justify-evenly w-full"
+        >
+          <div
+            id="playvs-computer"
+            class="bg-slate-100 p-2 rounded-lg hover:text-slate-50 hover:bg-green-500 transition-color duration-300"
+          >
+            Player vs Computer
+          </div>
+          <div
+            id="playvs-player"
+            class="bg-slate-100 p-2 rounded-lg hover:text-slate-50 hover:bg-green-500 transition-color duration-300"
+          >
+            Player vs Player
+          </div>
+          <div
+            id="option"
+            class="bg-slate-100 p-2 rounded-lg hover:text-slate-50 hover:bg-green-500 transition-color duration-300"
+          >
+            Option
+          </div>
+          <div
+            id="more-games"
+            class="bg-slate-100 p-2 rounded-lg hover:text-slate-50 hover:bg-green-500 transition-color duration-300"
+          >
+            More Games
+          </div>
+        </div>
+        <div
+          id="input-name"
+          class="flex-col relative hidden h-2/3 items-center justify-evenly"
+        >
+          <fieldset class="flex gap-2 relative flex-col p-2 h-32">
+            <label for="player-one">Player (X)</label>
+            <input
+              type="text"
+              class="w-full bg-slate-100 p-2 shadow-md border border-gray-300 rounded-lg"
+              placeholder="Player One"
+              name="player-one"
+              id="player-one"
+              required
+            />
+          </fieldset>
+          <fieldset
+            id="second-player"
+            class="flex gap-2 flex-col relative p-2 h-32"
+          >
+            <label for="player-two">Player (O)</label>
+            <input
+              type="text"
+              class="w-full bg-slate-100 p-2 shadow-md border border-gray-300 rounded-lg"
+              placeholder="Player Two"
+              name="player-two"
+              id="player-two"
+            />
+          </fieldset>
+          <button
+            id="submit-name"
+            class="hover:bg-green-500 text-2xl shadow-md border border-gray-300 bg-slate-100 p-2 rounded-lg hover:text-slate-50"
+          >
+            Start
+          </button>
+        </div>
       </div>
-      <div class="grid grid-rows-2">
-        <div id="text" class="text-lg">Player</div>
+      <div
+        id="game-container"
+        class="grid grid-rows-3 place-items-center w-full"
+      >
+        <div id="text" class="text-2xl grid grid-rows-2 font-bold text-center">
+          <div id="game-mode">Player vs Computer</div>
+          <div id="game-status">Player Wins!</div>
+        </div>
         <div
           id="game-board"
-          class="transition-opacity duration-300 grid-cols-3 grid-rows-3 grid gap-2 place-items-center"
+          class="transition-opacity duration-300 grid-cols-3 w-2/3 gap-y-3 grid place-items-center"
         ></div>
       </div>
     </main>
