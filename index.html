@@ -7,7 +7,25 @@
     <link href="dist/output.css" rel="stylesheet" />
     <link rel="stylesheet" href="src/input.css" />
   </head>
-  <body>
+  <body class="bg-slate-100">
+    <header class="bg-slate-50 shadow-sm">
+      <div id="logo" class="text-xl p-4">Tic Tac Toe</div>
+    </header>
+    <main class="w-full h-full grid place-items-center">
+      <div
+        id="menu"
+        class="bg-slate-50 hidden shadow-sm w-2/3 h-2/3 grid place-items-center"
+      >
+        <div onclick="resetGame()" class="text-2xl">Start</div>
+      </div>
+      <div class="grid grid-rows-2">
+        <div id="text" class="text-lg">Player</div>
+        <div
+          id="game-board"
+          class="transition-opacity duration-300 grid-cols-3 grid-rows-3 grid gap-2 place-items-center"
+        ></div>
+      </div>
+    </main>
     <script type="text/javascript" src="src/main.js"></script>
   </body>
 </html>
