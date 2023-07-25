@@ -73,6 +73,7 @@ function getNames() {
     return inputName.appendChild(pError);
   }
   player["playerOne"].name = One.value;
+  player["playerTwo"].name = "Computer";
   if (playMode === "Player vs Player") {
     if (One.value === "" || Two.value === "") {
       return inputName.appendChild(pError);
@@ -119,7 +120,6 @@ function showInputForm(mode) {
   }, 300);
   if (playMode === "Player vs Computer") {
     player["playerTwo"].type = "npc";
-    player["playerTwo"].name = "Computer";
     playerTwo.classList.add("hidden");
   }
 }
