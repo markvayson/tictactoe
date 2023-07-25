@@ -6,119 +6,83 @@
     <title>Tic Tac Toe</title>
     <link href="dist/output.css" rel="stylesheet" />
     <link rel="stylesheet" href="src/input.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body class="bg-slate-100">
-    <header class="bg-slate-50 shadow-sm">
-      <div id="logo" class="text-xl p-4">Tic Tac Toe</div>
-    </header>
-    <main class="grid place-items-center w-full h-5/6">
+    <main class="h-full">
       <div
-        id="menu-container"
-        class="bg-slate-50 place-content-center transition-opacity duration-300 p-4 relative text-lg font-bold shadow-md border border-gray-500 w-2/3 h-2/3 rounded-lg flex flex-col gap-2"
+        id="title-container"
+        class="w-full bg-green-500 h-full gap-10 text-4xl flex flex-col items-center justify-center"
       >
-        <div
-          id="menu"
-          class="flex transition-opacity duration-300 gap-4 flex-col items-center justify-evenly w-full"
-        >
-          <div
-            id="playvs-computer"
-            class="bg-slate-100 p-2 rounded-lg hover:text-slate-50 hover:bg-green-500 transition-color duration-300"
+        <div id="logo" class="p-4 bg-slate-100 font-bold text-green-700">
+          Tic Tac Toe
+        </div>
+        <div id="modes" class="grid hidden w-full h-1/2 place-items-center">
+          <button
+            class="mode bg-slate-100 rounded-xl text-green-700 p-2 hover:bg-slate-200"
           >
             Player vs Computer
-          </div>
-          <div
-            id="playvs-player"
-            class="bg-slate-100 p-2 rounded-lg hover:text-slate-50 hover:bg-green-500 transition-color duration-300"
+          </button>
+          <button
+            class="mode bg-slate-100 rounded-xl text-green-700 p-2 hover:bg-slate-200"
           >
             Player vs Player
-          </div>
-          <div
-            id="option"
-            class="bg-slate-100 p-2 rounded-lg hover:text-slate-50 hover:bg-green-500 transition-color duration-300"
-          >
-            Option
-          </div>
-          <div
-            id="more-games"
-            class="bg-slate-100 p-2 rounded-lg hover:text-slate-50 hover:bg-green-500 transition-color duration-300"
-          >
-            More Games
-          </div>
-        </div>
-        <div
-          id="input-name"
-          class="flex-col flex relative hidden h-2/3 items-center justify-evenly"
-        >
-          <fieldset class="flex gap-2 relative flex-col p-2 h-32">
-            <label for="player-one">Player (X)</label>
-            <input
-              type="text"
-              class="w-full bg-slate-100 p-2 shadow-md border border-gray-300 rounded-lg"
-              placeholder="Player One"
-              name="player-one"
-              id="player-one"
-              required
-            />
-          </fieldset>
-          <fieldset
-            id="second-player"
-            class="flex gap-2 flex-col relative p-2 h-32"
-          >
-            <label for="player-two">Player (O)</label>
-            <input
-              type="text"
-              class="w-full bg-slate-100 p-2 shadow-md border border-gray-300 rounded-lg"
-              placeholder="Player Two"
-              name="player-two"
-              id="player-two"
-            />
-          </fieldset>
-          <button
-            id="submit-name"
-            class="hover:bg-green-500 text-2xl shadow-md border border-gray-300 bg-slate-100 p-2 rounded-lg hover:text-slate-50"
-          >
-            Start
           </button>
+          <a
+            href=""
+            class="bg-slate-100 rounded-xl text-green-700 p-2 hover:bg-slate-200"
+            >More Games</a
+          >
         </div>
+        <form></form>
       </div>
-      <div
-        id="game-container"
-        class="grid hidden grid-rows-3 transition-opacity duration-300 place-items-center w-full"
-      >
-        <div
-          id="text"
-          class="text-2xl grid gap-2 grid-rows-2 font-bold text-center"
-        >
-          <div id="game-mode" class="grid grid-cols-3 items-center">
+      <div id="game-container" class="w-full hidden grid grid-rows-4 gap-2">
+        <div id="text-container" class="grid grid-rows-2 place-items-center">
+          <div
+            id="mode-title"
+            class="text-4xl grid grid-cols-5 p-2 text-center items-center"
+          >
             <span
-              class="bg-purple-600 text-slate-50 rounded-lg p-2"
               id="p1"
-            ></span
-            ><span>vs</span
-            ><span
-              class="bg-red-600 text-slate-50 rounded-lg p-2"
+              class="bg-red-500 col-span-2 p-2 rounded-xl text-slate-50"
+              >Player</span
+            ><span class="font-bold tracking-widest"> vs </span>
+            <span
               id="p2"
-            ></span>
+              class="bg-purple-500 col-span-2 p-2 rounded-xl text-slate-50"
+              >Computer</span
+            >
           </div>
-          <div id="game-status" class="opacity-0">Player Wins!</div>
+          <div
+            class="text-2xl w-3/4 h-12 text-center bg-slate-50 border border-gray-300 shadow-md p-2 rounded-lg tracking-widest"
+          >
+            <span id="game-status"></span>
+          </div>
         </div>
         <div
-          id="game-board"
-          class="transition-opacity duration-300 grid-cols-3 w-2/3 gap-y-3 grid place-items-center"
+          id="board-container"
+          class="gap-x-0 gap-y-5 p-2 grid grid-cols-3 place-items-center row-span-2"
         ></div>
-        <div id="end" class="hidden grid gap-2 text-center grid-cols-2">
-          <div
-            id="again-btn"
-            class="bg-slate-200 hover:bg-green-500 hover:text-slate-50 rounded-lg p-2"
+        <div id="menu-container" class="grid grid-cols-2 place-items-center">
+          <button
+            type="button"
+            id="reset-button"
+            class="text-2xl w-32 text-center bg-slate-400 p-2 rounded-lg text-slate-50"
           >
-            Try Again
-          </div>
-          <div
-            id="end-menu"
-            class="bg-slate-200 hover:bg-green-500 hover:text-slate-50 rounded-lg p-2"
+            reset
+          </button>
+          <button
+            type="button"
+            id="show-menu-button"
+            class="bg-green-500 w-32 text-center text-2xl p-2 rounded-lg text-slate-50"
           >
-            Menu
-          </div>
+            menu
+          </button>
         </div>
       </div>
     </main>
