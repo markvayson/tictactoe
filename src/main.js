@@ -138,19 +138,24 @@ function checkGame(currentPlayer) {
   const boxIds = boxElement.map((childElement) => childElement.textContent);
 
   const isEmpty = boxIds.some((obj) => obj === "");
-
-  if (!isEmpty) {
-    currentState = "Draw";
-    return true;
-  }
-  return winningGrids.some((grid) => {
+  const isWinning = winningGrids.some((grid) => {
     return grid.every((index) => boxIds[index] === currentPlayer.marker);
   });
+
+  if (!isEmpty) {
+    if (!isWinning) {
+      currentState = "Draw";
+    }
+    return true;
+  }
+  return isWinning;
 }
 function resetGame() {
+  currentState = "";
   currentPlayer = player["playerOne"];
   currentMarker = player["playerOne"].marker;
   gameBoard.classList.remove("pointer-events-none");
+  gameStatus.classList.add("opacity-0");
   end.classList.add("hidden");
   isMenu = true;
   showMenu();
@@ -209,6 +214,7 @@ function computerPicks() {
 }
 
 function winner(currentPlayer) {
+  console.log(currentState);
   gameBoard.classList.add("pointer-events-none");
   end.classList.remove("hidden");
   gameStatus.classList.remove("opacity-0");
