@@ -47,7 +47,7 @@
         </div>
         <div
           id="input-name"
-          class="flex-col relative hidden h-2/3 items-center justify-evenly"
+          class="flex-col flex relative hidden h-2/3 items-center justify-evenly"
         >
           <fieldset class="flex gap-2 relative flex-col p-2 h-32">
             <label for="player-one">Player (X)</label>
@@ -83,16 +83,43 @@
       </div>
       <div
         id="game-container"
-        class="grid hidden grid-rows-3 place-items-center w-full"
+        class="grid hidden grid-rows-3 transition-opacity duration-300 place-items-center w-full"
       >
-        <div id="text" class="text-2xl grid grid-rows-2 font-bold text-center">
-          <div id="game-mode">Player vs Computer</div>
-          <div id="game-status">Player Wins!</div>
+        <div
+          id="text"
+          class="text-2xl grid gap-2 grid-rows-2 font-bold text-center"
+        >
+          <div id="game-mode" class="grid grid-cols-3 items-center">
+            <span
+              class="bg-purple-600 text-slate-50 rounded-lg p-2"
+              id="p1"
+            ></span
+            ><span>vs</span
+            ><span
+              class="bg-red-600 text-slate-50 rounded-lg p-2"
+              id="p2"
+            ></span>
+          </div>
+          <div id="game-status" class="opacity-0">Player Wins!</div>
         </div>
         <div
           id="game-board"
           class="transition-opacity duration-300 grid-cols-3 w-2/3 gap-y-3 grid place-items-center"
         ></div>
+        <div id="end" class="hidden grid gap-2 text-center grid-cols-2">
+          <div
+            id="again-btn"
+            class="bg-slate-200 hover:bg-green-500 hover:text-slate-50 rounded-lg p-2"
+          >
+            Try Again
+          </div>
+          <div
+            id="end-menu"
+            class="bg-slate-200 hover:bg-green-500 hover:text-slate-50 rounded-lg p-2"
+          >
+            Menu
+          </div>
+        </div>
       </div>
     </main>
     <script type="text/javascript" src="src/main.js"></script>

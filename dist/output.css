@@ -546,20 +546,8 @@ video {
   position: relative;
 }
 
-.-bottom-10 {
-  bottom: -2.5rem;
-}
-
-.bottom-0 {
-  bottom: 0px;
-}
-
 .-bottom-5 {
   bottom: -1.25rem;
-}
-
-.row-span-2 {
-  grid-row: span 2 / span 2;
 }
 
 .flex {
@@ -586,20 +574,8 @@ video {
   height: 8rem;
 }
 
-.h-full {
-  height: 100%;
-}
-
-.h-4\/5 {
-  height: 80%;
-}
-
 .h-5\/6 {
   height: 83.333333%;
-}
-
-.h-auto {
-  height: auto;
 }
 
 .w-2\/3 {
@@ -614,16 +590,8 @@ video {
   width: 100%;
 }
 
-.w-4\/5 {
-  width: 80%;
-}
-
-.w-5\/6 {
-  width: 83.333333%;
-}
-
-.w-auto {
-  width: auto;
+.w-1\/2 {
+  width: 50%;
 }
 
 .cursor-pointer {
@@ -634,16 +602,16 @@ video {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .grid-rows-2 {
   grid-template-rows: repeat(2, minmax(0, 1fr));
 }
 
 .grid-rows-3 {
   grid-template-rows: repeat(3, minmax(0, 1fr));
-}
-
-.grid-rows-1 {
-  grid-template-rows: repeat(1, minmax(0, 1fr));
 }
 
 .flex-col {
@@ -654,16 +622,8 @@ video {
   place-content: center;
 }
 
-.place-content-evenly {
-  place-content: space-evenly;
-}
-
 .place-items-center {
   place-items: center;
-}
-
-.content-center {
-  align-content: center;
 }
 
 .items-center {
@@ -678,10 +638,6 @@ video {
   justify-content: space-evenly;
 }
 
-.justify-items-center {
-  justify-items: center;
-}
-
 .gap-2 {
   gap: 0.5rem;
 }
@@ -690,28 +646,8 @@ video {
   gap: 1rem;
 }
 
-.gap-y-2 {
-  row-gap: 0.5rem;
-}
-
-.gap-y-4 {
-  row-gap: 1rem;
-}
-
 .gap-y-3 {
   row-gap: 0.75rem;
-}
-
-.place-self-center {
-  place-self: center;
-}
-
-.self-center {
-  align-self: center;
-}
-
-.justify-self-center {
-  justify-self: center;
 }
 
 .rounded-lg {
@@ -752,9 +688,14 @@ video {
   background-color: rgb(248 250 252 / var(--tw-bg-opacity));
 }
 
-.bg-green-600 {
+.bg-slate-300 {
   --tw-bg-opacity: 1;
-  background-color: rgb(22 163 74 / var(--tw-bg-opacity));
+  background-color: rgb(203 213 225 / var(--tw-bg-opacity));
+}
+
+.bg-slate-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(226 232 240 / var(--tw-bg-opacity));
 }
 
 .p-2 {
@@ -787,16 +728,6 @@ video {
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
-}
-
-.text-3xl {
-  font-size: 1.875rem;
-  line-height: 2.25rem;
-}
-
-.text-4xl {
-  font-size: 2.25rem;
-  line-height: 2.5rem;
 }
 
 .font-bold {
