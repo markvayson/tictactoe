@@ -119,6 +119,7 @@ function showInputForm(mode) {
   }, 300);
   if (playMode === "Player vs Computer") {
     player["playerTwo"].type = "npc";
+    player["playerTwo"].name = "Computer";
     playerTwo.classList.add("hidden");
   }
 }
