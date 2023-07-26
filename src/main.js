@@ -16,7 +16,7 @@ const gameBoard = (() => {
   };
 })();
 
-const createPlayer = (name, marker) => {
+const createPlayer = (name, marker, type) => {
   return {
     name,
     marker,
@@ -26,14 +26,16 @@ const createPlayer = (name, marker) => {
 const game = (() => {
   const playerOne = createPlayer("Mark", "X");
   const playerTwo = createPlayer("Vayson", "O");
-  let currentPlayer = playerOne;
-
-  const getCurrentPlayer = () => currentPlayer;
-  const setCurrentPlayer = (player) => {
-    currentPlayer = player;
+  let Turn = playerOne;
+  const getHuman = () => playerTwo;
+  const getBot = () => playerOne;
+  let round = 1;
+  const getRound = () => round;
+  const getPlayerToMove = () => Turn;
+  const setPlayerToMove = (player) => {
+    Turn = player;
   };
   let mode;
-  console.log(mode);
   const winningGrids = [
     [0, 1, 2],
     [0, 3, 6],
@@ -45,32 +47,83 @@ const game = (() => {
     [6, 7, 8],
   ];
 
-  const checkGame = () => {
+  const checkGame = (player) => {
     const board = gameBoard.getBoard();
     const emptyBoxCount = board.reduce((count, content) => {
       return count + (content === "" ? 1 : 0);
     }, 0);
     const isWinning = winningGrids.some((grid) => {
-      return grid.every((index) => board[index] === currentPlayer.marker);
+      return grid.every((index) => board[index] === player.marker);
     });
-
     return {
       isWinning,
       isEmpty: emptyBoxCount === 0,
     };
   };
 
-  const switchPlayer = () => {
-    currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
+  const findBestMove = () => {
+    let bestScore = -Infinity;
+    let bestMove;
+    for (let i = 0; i < gameBoard.getBoard().length; i++) {
+      if (gameBoard.getBoard()[i] === "") {
+        gameBoard.updateBoard(i, getBot().marker);
+        const score = minimax(gameBoard.getBoard(), 0, false, getBot());
+        gameBoard.updateBoard(i, "");
+        if (score > bestScore) {
+          bestScore = score;
+          bestMove = i;
+        }
+      }
+    }
+    return {
+      bestMove,
+      bestScore,
+    };
+  };
+
+  const minimax = (board, depth, isMaximizing, player) => {
+    scores = {
+      X: 1,
+      O: -1,
+      draw: 0,
+    };
+    const result = checkGame(player);
+    if (result.isWinning) return scores[player.marker];
+    if (result.isEmpty) return scores["draw"];
+    if (isMaximizing) {
+      let bestScore = -Infinity;
+      for (let i = 0; i < board.length; i++) {
+        if (board[i] === "") {
+          board[i] = getBot().marker;
+          const score = minimax(board, depth + 1, false, getBot());
+          board[i] = "";
+          bestScore = Math.max(bestScore, score);
+        }
+      }
+      return bestScore;
+    } else {
+      let bestScore = Infinity;
+      for (let i = 0; i < board.length; i++) {
+        if (board[i] === "") {
+          board[i] = getHuman().marker;
+          const score = minimax(board, depth + 1, true, getHuman());
+          board[i] = "";
+          bestScore = Math.min(bestScore, score);
+        }
+      }
+      return bestScore;
+    }
   };
   return {
     playerOne,
     playerTwo,
-    currentPlayer,
     checkGame,
-    switchPlayer,
-    getCurrentPlayer,
-    setCurrentPlayer,
+    getPlayerToMove,
+    setPlayerToMove,
+    findBestMove,
+    getRound,
+    getBot,
+    getHuman,
   };
 })();
 
@@ -86,9 +139,30 @@ const displayController = (() => {
   const init = () => {
     createBoard();
     displayTexts();
-    resetButton.addEventListener("click", resetBoard);
+    MakeAiMove();
 
-    updatePlayers();
+    resetButton.addEventListener("click", resetBoard);
+  };
+  const MakeAiMove = () => {
+    if (game.getPlayerToMove() !== game.getBot()) return;
+
+    const boxes = document.querySelectorAll(".box");
+    let { bestMove, bestScore } = game.findBestMove();
+
+    if (bestScore === 0) {
+      bestMove = Math.floor(Math.random() * gameBoard.getBoard().length);
+    }
+    console.log(bestScore);
+    if (gameBoard.getBoard()[bestMove] !== "") return MakeAiMove();
+    gameBoard.updateBoard(bestMove, game.getPlayerToMove().marker);
+    boxes[bestMove].textContent = game.getPlayerToMove().marker;
+    boxes[bestMove].classList.add("bg-red-500", "text-slate-50");
+    boxes[bestMove].classList.remove("bg-slate-50");
+    const { isWinning, isEmpty } = game.checkGame(game.getPlayerToMove());
+    if (isWinning || isEmpty) {
+      return displayWinner(isWinning, isEmpty);
+    }
+    return game.setPlayerToMove(game.getHuman());
   };
 
   const updatePlayers = () => {
@@ -101,7 +175,7 @@ const displayController = (() => {
     return playerOneInput.value !== "" || playerTwoInput.value !== "";
   };
   const showContainer = () => {
-    if (!inputValid()) return;
+    // if (!inputValid()) return;
     if (menu) {
       titleContainer.classList.add("hidden");
       gameContainer.classList.remove("hidden");
@@ -129,32 +203,44 @@ const displayController = (() => {
   };
 
   const playerClickedBox = (e) => {
+    if (game.getPlayerToMove() === game.getBot()) return;
+
     const box = e.target;
-    gameBoard.updateBoard(box.dataset.index, game.getCurrentPlayer().marker);
 
     if (box.textContent !== "") return;
-    box.textContent = game.getCurrentPlayer().marker;
+    gameBoard.updateBoard(box.dataset.index, game.getPlayerToMove().marker);
+
+    box.textContent = game.getPlayerToMove().marker;
     box.classList.remove("bg-slate-50");
-    if (game.getCurrentPlayer().marker === "X") {
+    if (game.getPlayerToMove().marker === "X") {
       box.classList.add("bg-red-500", "text-slate-50");
     } else {
       box.classList.add("bg-purple-500", "text-slate-50");
     }
-    const { isWinning, isEmpty } = game.checkGame();
+
+    const { isWinning, isEmpty } = game.checkGame(game.getPlayerToMove());
+
     if (isWinning || isEmpty) {
-      return displayWinner(isEmpty);
+      return displayWinner(isWinning, isEmpty);
     }
-    game.switchPlayer();
-    gameStatus.textContent = `${game.getCurrentPlayer().name}'s Turn (${
-      game.getCurrentPlayer().marker
+    gameStatus.textContent = `${game.getPlayerToMove().name}'s Turn (${
+      game.getPlayerToMove().marker
     })`;
+    game.setPlayerToMove(game.getBot());
+    return setTimeout(() => {
+      MakeAiMove();
+    }, 1000);
   };
 
-  const displayWinner = (zeroBox) => {
-    if (zeroBox) {
+  const displayWinner = (winner, zeroBox) => {
+    const boxes = document.querySelectorAll(".box");
+    boxes.forEach((box) => {
+      box.classList.add("pointer-events-none");
+    });
+    if (zeroBox && !winner) {
       return (gameStatus.textContent = "It's a Draw!");
     }
-    return (gameStatus.textContent = `${game.getCurrentPlayer().name} wins!`);
+    return (gameStatus.textContent = `${game.getPlayerToMove().name} wins!`);
   };
 
   const displayTexts = () => {
@@ -162,21 +248,33 @@ const displayController = (() => {
     const p2 = document.getElementById("p2");
     p1.textContent = game.playerOne.name;
     p2.textContent = game.playerTwo.name;
-    gameStatus.textContent = `${game.currentPlayer.name}'s Turn (${game.currentPlayer.marker})`;
+    gameStatus.textContent = `${game.getPlayerToMove().name}'s Turn (${
+      game.getPlayerToMove().marker
+    })`;
   };
 
   const resetBoard = () => {
     const boxElements = document.querySelectorAll(".box");
     boxElements.forEach((box) => {
       box.textContent = "";
-      box.classList.remove("bg-red-500", "bg-purple-500", "text-slate-50");
+      box.classList.remove(
+        "bg-red-500",
+        "bg-purple-500",
+        "text-slate-50",
+        "pointer-events-none"
+      );
       box.classList.add("bg-slate-50");
     });
-
     gameBoard.resetBoard();
 
-    game.setCurrentPlayer(game.playerOne);
-    gameStatus.textContent = `${game.currentPlayer.name}'s Turn (${game.currentPlayer.marker})`;
+    game.setPlayerToMove(game.getBot());
+    gameStatus.textContent = `${game.getPlayerToMove().name}'s Turn (${
+      game.getPlayerToMove().marker
+    })`;
+
+    return setTimeout(() => {
+      MakeAiMove();
+    }, 1000);
   };
 
   return {
@@ -186,3 +284,5 @@ const displayController = (() => {
 
 const playBtn = document.getElementById("play-btn");
 playBtn.addEventListener("click", () => displayController.showContainer());
+
+displayController.showContainer();
