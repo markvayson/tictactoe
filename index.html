@@ -17,7 +17,7 @@
     <main class="h-full">
       <div
         id="title-container"
-        class="w-full bg-green-500 h-full gap-10 text-4xl flex flex-col items-center justify-center"
+        class="w-full bg-green-500 h-full shadow-xl shadow-emerald-950 gap-10 text-4xl flex flex-col items-center justify-center"
       >
         <div id="logo" class="p-4 bg-slate-100 font-bold text-green-700">
           Tic Tac Toe
@@ -39,7 +39,25 @@
             >More Games</a
           >
         </div>
-        <form></form>
+        <div class="h-1/2 grid">
+          <div class="grid gap-2">
+            <label for="player-one">Player One</label>
+            <input type="text" id="player-one" placeholder="Player One" />
+            <p id="error" class="text-red-600">Please add a name</p>
+          </div>
+          <div class="grid gap-2">
+            <label for="player-two">Player Two</label>
+            <input type="text" id="player-two" placeholder="Player Two" />
+            <p id="error" class="text-red-600">Please add a name</p>
+          </div>
+          <button
+            id="play-btn"
+            type="button"
+            class="bg-slate-50 p-2 text-green-700 w-1/2 place-self-center rounded-lg"
+          >
+            Play
+          </button>
+        </div>
       </div>
       <div id="game-container" class="w-full hidden grid grid-rows-4 gap-2">
         <div id="text-container" class="grid grid-rows-2 place-items-center">

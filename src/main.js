@@ -23,17 +23,7 @@ const createPlayer = (name, marker) => {
   };
 };
 
-const selectMode = (e) => {
-  return (mode = e.target.textContent.trim());
-};
-
 const game = (() => {
-  const modeBtns = document.querySelectorAll(".mode");
-  modeBtns.forEach((mode) => {
-    mode.addEventListener("click", selectMode);
-  });
-  const playWithComputer = document.getElementById("p2c");
-  const playWithPlayer = document.getElementById("p2p");
   const playerOne = createPlayer("Mark", "X");
   const playerTwo = createPlayer("Vayson", "O");
   let currentPlayer = playerOne;
@@ -87,11 +77,42 @@ const game = (() => {
 const displayController = (() => {
   const gameStatus = document.getElementById("game-status");
   const resetButton = document.getElementById("reset-button");
+  const titleContainer = document.getElementById("title-container");
+  const gameContainer = document.getElementById("game-container");
 
+  const playerTwoInput = document.getElementById("player-two");
+  const playerOneInput = document.getElementById("player-one");
+  let menu = true;
   const init = () => {
     createBoard();
     displayTexts();
     resetButton.addEventListener("click", resetBoard);
+
+    updatePlayers();
+  };
+
+  const updatePlayers = () => {
+    game.playerOne.name = playerOneInput.value;
+    game.playerTwo.name = playerTwoInput.value;
+    displayTexts();
+  };
+
+  const inputValid = () => {
+    return playerOneInput.value !== "" || playerTwoInput.value !== "";
+  };
+  const showContainer = () => {
+    if (!inputValid()) return;
+    if (menu) {
+      titleContainer.classList.add("hidden");
+      gameContainer.classList.remove("hidden");
+      menu = false;
+    } else {
+      titleContainer.classList.remove("hidden");
+      gameContainer.classList.add("hidden");
+      menu = true;
+    }
+
+    return init();
   };
 
   const createBoard = () => {
@@ -159,8 +180,9 @@ const displayController = (() => {
   };
 
   return {
-    init,
+    showContainer,
   };
 })();
 
-displayController.init();
+const playBtn = document.getElementById("play-btn");
+playBtn.addEventListener("click", () => displayController.showContainer());
