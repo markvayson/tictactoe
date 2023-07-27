@@ -56,10 +56,16 @@ const game = (() => {
     const emptyBoxCount = board.reduce((count, content) => {
       return count + (content === "" ? 1 : 0);
     }, 0);
+    let winningGrid;
     const isWinning = winningGrids.some((grid) => {
-      return grid.every((index) => board[index] === player.marker);
+      const isWinningGrid = grid.every(
+        (index) => board[index] === player.marker
+      );
+      if (isWinningGrid) winningGrid = grid;
+      return isWinningGrid;
     });
     return {
+      winningGrid,
       isWinning,
       isEmpty: emptyBoxCount === 0,
     };
@@ -198,7 +204,6 @@ const displayController = (() => {
     if (game.getPlayerToMove() !== game.getBot()) return;
     const boxes = document.querySelectorAll(".box");
     let { bestMove, bestScore } = game.findBestMove();
-    console.log(game.getRound());
     if (
       game.getMode() === "Easy" ||
       (game.getMode() === "Normal" && bestScore === 0)
@@ -247,10 +252,19 @@ const displayController = (() => {
   };
 
   const displayTexts = () => {
-    const { isWinning, isEmpty } = game.checkGame(game.getPlayerToMove());
+    const { winningGrid, isWinning, isEmpty } = game.checkGame(
+      game.getPlayerToMove()
+    );
     const turnTexts = document.querySelectorAll(".turn-text");
 
     const boxElements = document.querySelectorAll(".box");
+    if (winningGrid !== undefined) {
+      let selectedBoxes = winningGrid.map((index) => boxElements[index]);
+      selectedBoxes.forEach((box) => {
+        box.classList.remove("bg-red-500", "bg-purple-500");
+        box.classList.add("bg-green-500");
+      });
+    }
     if (isWinning) {
       boxElements.forEach((box) => box.classList.add("pointer-events-none"));
       if (game.getPlayerToMove() === game.getBot()) {
