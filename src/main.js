@@ -304,6 +304,7 @@ const displayController = (() => {
       box.classList.remove(
         "bg-red-500",
         "bg-purple-500",
+        "bg-green-500",
         "text-slate-50",
         "pointer-events-none"
       );
