@@ -278,7 +278,7 @@ const displayController = (() => {
     }
     if (isEmpty) {
       boxElements.forEach((box) => {
-        box.classList.remove("bg-red-500","bg-purple-500")
+        box.classList.remove("bg-red-500","bg-purple-500","bg-slate-50")
         box.classList.add("pointer-events-none","bg-green-500")});
       turnTexts[0].textContent = "";
       turnTexts[1].textContent = "";
