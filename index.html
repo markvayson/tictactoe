@@ -60,16 +60,20 @@
         </div>
       </div>
       <div id="game-container" class="w-full grid grid-rows-4 gap-2">
-        <div id="text-container" class="grid grid-rows-2 place-items-center">
+        <div id="text-container" class="flex pt-2 flex-col place-items-center">
           <div
             id="mode-title"
-            class="text-4xl grid grid-cols-5 p-2 text-center items-center"
+            class="w-full text-4xl relative gap-2 grid grid-cols-4 text-center items-center"
           >
+            <span
+              class="absolute bg-slate-50 p-2 rounded-lg shadow-md text-center left-1/2 transfrom -translate-x-1/2"
+              >vs</span
+            >
             <span
               id="p1"
               class="bg-red-500 col-span-2 p-2 rounded-xl text-slate-50"
               >Player</span
-            ><span class="font-bold tracking-widest"> vs </span>
+            >
             <span
               id="p2"
               class="bg-purple-500 col-span-2 p-2 rounded-xl text-slate-50"
@@ -77,9 +81,26 @@
             >
           </div>
           <div
-            class="text-2xl w-3/4 h-12 text-center bg-slate-50 border border-gray-300 shadow-md p-2 rounded-lg tracking-widest"
+            class="grid relative grid-cols-4 text-xl w-full h-12 text-center p-2 rounded-lg tracking-widest"
           >
-            <span id="game-status"></span>
+            <span class="turn-text col-span-2"></span>
+            <span class="turn-text col-span-2"></span>
+            <span
+              class="turn-text absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2"
+            ></span>
+          </div>
+          <div
+            id="game-mode"
+            class="grid gap-2 px-2 font-bold grid-cols-3 w-full"
+          >
+            <button
+              type="button"
+              class="mode-button bg-green-500 text-slate-50 p-1"
+            >
+              Easy
+            </button>
+            <button type="button" class="mode-button">Normal</button>
+            <button type="button" class="mode-button">Hard</button>
           </div>
         </div>
         <div

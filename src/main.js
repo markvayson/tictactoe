@@ -24,18 +24,22 @@ const createPlayer = (name, marker, type) => {
 };
 
 const game = (() => {
-  const playerOne = createPlayer("Mark", "X");
-  const playerTwo = createPlayer("Vayson", "O");
+  const playerOne = createPlayer("Ai", "X");
+  const playerTwo = createPlayer("Player", "O");
   let Turn = playerOne;
   const getHuman = () => playerTwo;
   const getBot = () => playerOne;
   let round = 1;
   const getRound = () => round;
+  const resetRound = () => (round = 0);
   const getPlayerToMove = () => Turn;
   const setPlayerToMove = (player) => {
     Turn = player;
+    round++;
   };
-  let mode;
+  let mode = "Easy";
+  const getMode = () => mode;
+  const setMode = (difficulty) => (mode = difficulty);
   const winningGrids = [
     [0, 1, 2],
     [0, 3, 6],
@@ -122,55 +126,39 @@ const game = (() => {
     setPlayerToMove,
     findBestMove,
     getRound,
+    resetRound,
     getBot,
     getHuman,
+    getMode,
+    setMode,
   };
 })();
 
 const displayController = (() => {
-  const gameStatus = document.getElementById("game-status");
   const resetButton = document.getElementById("reset-button");
   const titleContainer = document.getElementById("title-container");
   const gameContainer = document.getElementById("game-container");
+  const modeBtns = document.querySelectorAll(".mode-button");
 
-  const playerTwoInput = document.getElementById("player-two");
-  const playerOneInput = document.getElementById("player-one");
   let menu = true;
   const init = () => {
     createBoard();
     displayTexts();
     MakeAiMove();
-
+    modeBtns.forEach((mode) => {
+      mode.addEventListener("click", () => changeMode(mode));
+    });
     resetButton.addEventListener("click", resetBoard);
   };
-  const MakeAiMove = () => {
-    if (game.getPlayerToMove() !== game.getBot()) return;
-
-    const boxes = document.querySelectorAll(".box");
-    let { bestMove, bestScore } = game.findBestMove();
-
-    if (bestScore === 0) {
-      bestMove = Math.floor(Math.random() * gameBoard.getBoard().length);
-    }
-    console.log(bestScore);
-    if (gameBoard.getBoard()[bestMove] !== "") return MakeAiMove();
-    gameBoard.updateBoard(bestMove, game.getPlayerToMove().marker);
-    boxes[bestMove].textContent = game.getPlayerToMove().marker;
-    boxes[bestMove].classList.add("bg-red-500", "text-slate-50");
-    boxes[bestMove].classList.remove("bg-slate-50");
-    const { isWinning, isEmpty } = game.checkGame(game.getPlayerToMove());
-    if (isWinning || isEmpty) {
-      return displayWinner(isWinning, isEmpty);
-    }
-    return game.setPlayerToMove(game.getHuman());
+  const changeMode = (mode) => {
+    if (game.getMode() === mode.textContent.trim()) return;
+    game.setMode(mode.textContent.trim());
+    modeBtns.forEach((item) =>
+      item.classList.remove("bg-green-500", "text-slate-50")
+    );
+    mode.classList.add("bg-green-500", "text-slate-50");
+    resetBoard();
   };
-
-  const updatePlayers = () => {
-    game.playerOne.name = playerOneInput.value;
-    game.playerTwo.name = playerTwoInput.value;
-    displayTexts();
-  };
-
   const inputValid = () => {
     return playerOneInput.value !== "" || playerTwoInput.value !== "";
   };
@@ -191,6 +179,10 @@ const displayController = (() => {
 
   const createBoard = () => {
     const boxes = gameBoard.getBoard().length;
+    const p1 = document.getElementById("p1");
+    const p2 = document.getElementById("p2");
+    p1.textContent = game.playerOne.name;
+    p2.textContent = game.playerTwo.name;
     const boardContainer = document.getElementById("board-container");
     for (let i = 0; i < boxes; i++) {
       const box = document.createElement("button");
@@ -202,6 +194,34 @@ const displayController = (() => {
     }
   };
 
+  const MakeAiMove = () => {
+    if (game.getPlayerToMove() !== game.getBot()) return;
+    const boxes = document.querySelectorAll(".box");
+    let { bestMove, bestScore } = game.findBestMove();
+    console.log(game.getRound());
+    if (
+      game.getMode() === "Easy" ||
+      (game.getMode() === "Normal" && bestScore === 0)
+    ) {
+      bestMove = Math.floor(Math.random() * gameBoard.getBoard().length);
+    }
+    if (game.getMode() === "Hard" && game.getRound() === 1) {
+      const desiredMoves = [0, 2, 6, 8];
+      const randomIndex = Math.floor(Math.random() * desiredMoves.length);
+      bestMove = desiredMoves[randomIndex];
+    }
+    if (gameBoard.getBoard()[bestMove] !== "") return MakeAiMove();
+    gameBoard.updateBoard(bestMove, game.getPlayerToMove().marker);
+    boxes[bestMove].textContent = game.getPlayerToMove().marker;
+    boxes[bestMove].classList.add("bg-red-500", "text-slate-50");
+    boxes[bestMove].classList.remove("bg-slate-50");
+
+    if (!displayTexts()) {
+      return game.setPlayerToMove(game.getHuman());
+    }
+
+    return;
+  };
   const playerClickedBox = (e) => {
     if (game.getPlayerToMove() === game.getBot()) return;
 
@@ -217,44 +237,52 @@ const displayController = (() => {
     } else {
       box.classList.add("bg-purple-500", "text-slate-50");
     }
-
-    const { isWinning, isEmpty } = game.checkGame(game.getPlayerToMove());
-
-    if (isWinning || isEmpty) {
-      return displayWinner(isWinning, isEmpty);
+    if (!displayTexts()) {
+      game.setPlayerToMove(game.getBot());
+      return setTimeout(() => {
+        MakeAiMove();
+      }, 300);
     }
-    gameStatus.textContent = `${game.getPlayerToMove().name}'s Turn (${
-      game.getPlayerToMove().marker
-    })`;
-    game.setPlayerToMove(game.getBot());
-    return setTimeout(() => {
-      MakeAiMove();
-    }, 1000);
-  };
-
-  const displayWinner = (winner, zeroBox) => {
-    const boxes = document.querySelectorAll(".box");
-    boxes.forEach((box) => {
-      box.classList.add("pointer-events-none");
-    });
-    if (zeroBox && !winner) {
-      return (gameStatus.textContent = "It's a Draw!");
-    }
-    return (gameStatus.textContent = `${game.getPlayerToMove().name} wins!`);
+    return;
   };
 
   const displayTexts = () => {
-    const p1 = document.getElementById("p1");
-    const p2 = document.getElementById("p2");
-    p1.textContent = game.playerOne.name;
-    p2.textContent = game.playerTwo.name;
-    gameStatus.textContent = `${game.getPlayerToMove().name}'s Turn (${
-      game.getPlayerToMove().marker
-    })`;
+    const { isWinning, isEmpty } = game.checkGame(game.getPlayerToMove());
+    const turnTexts = document.querySelectorAll(".turn-text");
+
+    const boxElements = document.querySelectorAll(".box");
+    if (isWinning) {
+      boxElements.forEach((box) => box.classList.add("pointer-events-none"));
+      if (game.getPlayerToMove() === game.getBot()) {
+        turnTexts[1].textContent = "";
+
+        return (turnTexts[0].textContent = "wins!");
+      } else {
+        turnTexts[0].textContent = "";
+        return (turnTexts[1].textContent = "wins!");
+      }
+    }
+    if (isEmpty) {
+      boxElements.forEach((box) => box.classList.add("pointer-events-none"));
+      turnTexts[0].textContent = "";
+      turnTexts[1].textContent = "";
+      return (turnTexts[2].textContent = "Draw!");
+    }
+    if (game.getPlayerToMove() === game.getHuman()) {
+      turnTexts[0].textContent = "turn";
+      turnTexts[1].textContent = "";
+    } else {
+      turnTexts[1].textContent = "turn";
+      turnTexts[0].textContent = "";
+    }
+    return isWinning || isEmpty;
   };
 
   const resetBoard = () => {
     const boxElements = document.querySelectorAll(".box");
+    const turn = document.querySelectorAll(".turn-text");
+
+    turn.forEach((text) => (text.textContent = ""));
     boxElements.forEach((box) => {
       box.textContent = "";
       box.classList.remove(
@@ -266,15 +294,10 @@ const displayController = (() => {
       box.classList.add("bg-slate-50");
     });
     gameBoard.resetBoard();
-
+    game.resetRound();
     game.setPlayerToMove(game.getBot());
-    gameStatus.textContent = `${game.getPlayerToMove().name}'s Turn (${
-      game.getPlayerToMove().marker
-    })`;
 
-    return setTimeout(() => {
-      MakeAiMove();
-    }, 1000);
+    return MakeAiMove();
   };
 
   return {
